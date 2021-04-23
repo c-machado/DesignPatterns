@@ -1,4 +1,4 @@
-package org.example.org.example.solid_srp;
+package org.example.solid_srp;
 
 import java.io.BufferedWriter;
 import java.io.IOException;

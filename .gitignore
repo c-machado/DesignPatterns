@@ -1,3 +1,6 @@
 /.idea
-/target
+chapter1/target
+chapter1/chapter1.iml
+chapter2-optimizing/target
+chapter2-optimizing/chapter2-optimizing.iml
 DesignPatternsBookExercises.iml

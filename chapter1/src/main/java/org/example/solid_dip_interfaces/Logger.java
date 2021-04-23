@@ -1,4 +1,4 @@
-package org.example.org.example.solid_dip_interfaces;
+package org.example.solid_dip_interfaces;
 
 import java.io.IOException;
 
