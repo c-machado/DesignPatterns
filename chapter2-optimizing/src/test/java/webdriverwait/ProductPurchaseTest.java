@@ -96,56 +96,32 @@ public class ProductPurchaseTest {
         phone.sendKeys("3002114915");
 
         var email = waitAndFindElement(By.id("billing_email"));
-        email.sendKeys("info@yahoo.es");
-        purchaseEmail = "info@yahoo.es";
+        email.sendKeys("info@berlinspaceflowers.com");
+        purchaseEmail = "info@berlinspaceflowers.com";
 
+        waitToBeClickable(By.id("place_order"));
         var placeOrder = waitAndFindElement(By.id("place_order"));
         placeOrder.click();
 
         var orderReceived = driver.findElement(By.cssSelector(".entry-title"));
         Assert.assertEquals(orderReceived.getText(), "Checkout");
     }
-//    @Test(priority = 2)
+    @Test(priority = 2)
     public void completePurchaseSuccessfullyWithExistingUser() throws InterruptedException {
         driver.navigate().to("http://demos.bellatrix.solutions/");
-        var addToCartFalcon9 = driver.findElement(By.cssSelector("[data-product_id*='28']"));
-        addToCartFalcon9.click();
-        Thread.sleep(5000);
-        var viewCart = driver.findElement(By.cssSelector(".added_to_cart"));
-        viewCart.click();
-        var couponCodeTextField = driver.findElement(By.id("coupon_code"));
-        couponCodeTextField.clear();
-        couponCodeTextField.sendKeys("happybirthday");
-        var applyCouponButton = driver.findElement(By.cssSelector("[name='apply_coupon']"));
-        applyCouponButton.click();
-        Thread.sleep(5000);
-        var messageAlert = driver.findElement(By.cssSelector(".woocommerce-message"));
-        Assert.assertEquals(messageAlert.getText(), "Coupon code applied successfully.");
-        var quantityBox = driver.findElement(By.cssSelector(".quantity input"));
-        quantityBox.clear();
-        quantityBox.sendKeys("2");
-        Thread.sleep(5000);
-        var updateCar = driver.findElement(By.cssSelector("[name='update_cart']"));
-        updateCar.click();
-        Thread.sleep(4000);
-        var totalPrice = driver.findElement(By.cssSelector("[data-title='Total'] " +
-                "span.woocommerce-Price-amount"));
-        Assert.assertEquals("114.00€", totalPrice.getText());
-        Thread.sleep(5000);
+        addRocketToShoppingCart();
+        applyCoupon();
+        increaseProductQuantity();
         var checkoutCta = driver.findElement(By.cssSelector(".checkout-button"));
         checkoutCta.click();
         var showLogin = driver.findElement(By.cssSelector(".showlogin"));
         showLogin.click();
-        var username = driver.findElement(By.id("username"));
-        username.sendKeys(purchaseEmail);
-        var password = driver.findElement(By.id("password"));
-        password.sendKeys(GetUserPasswordFromDb(purchaseEmail));
-        var loginCta = driver.findElement(By.cssSelector("button[name='login']"));
-        loginCta.click();
+        login(purchaseEmail);
         Thread.sleep(5000);
-        var placeOrder = driver.findElement(By.id("place_order"));
+        waitToBeClickable(By.id("place_order"));
+        var placeOrder = waitAndFindElement(By.id("place_order"));
         placeOrder.click();
-        Thread.sleep(5000);
+        Thread.sleep(10000);
         var orderReceived = driver.findElement(By.cssSelector(".entry-title"));
         Assert.assertEquals(orderReceived.getText(), "Order received");
         var orderNumber = driver.findElement(By.cssSelector("li.woocommerce-order-overview__order"));
@@ -188,6 +164,7 @@ public class ProductPurchaseTest {
         webDriverWait.until(ExpectedConditions.elementToBeClickable(by));
     }
 
+    //todo: break the method per each functionality find & wait
     private WebElement waitAndFindElement(By by) {
         var webDriverWait = new WebDriverWait(driver, 30);
         return webDriverWait.until(ExpectedConditions.presenceOfElementLocated(by));
@@ -196,6 +173,48 @@ public class ProductPurchaseTest {
     private List<WebElement> waitAndFindElements(By by) {
         var webDriverWait = new WebDriverWait(driver, 30);
         return webDriverWait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(by));
+    }
+
+    private void login(String username) throws InterruptedException {
+        Thread.sleep(5000);
+        var usernameField = driver.findElement(By.id("username"));
+        usernameField.sendKeys(purchaseEmail);
+        var passwordField = driver.findElement(By.id("password"));
+        passwordField.sendKeys(GetUserPasswordFromDb(purchaseEmail));
+        var loginCta = driver.findElement(By.cssSelector("button[name='login']"));
+        loginCta.click();
+    }
+    private void increaseProductQuantity() throws InterruptedException {
+        var quantityBox = driver.findElement(By.cssSelector(".quantity input"));
+        quantityBox.clear();
+        quantityBox.sendKeys("2");
+        Thread.sleep(5000);
+        var updateCar = driver.findElement(By.cssSelector("[name='update_cart']"));
+        updateCar.click();
+        Thread.sleep(4000);
+
+        var totalPrice = driver.findElement(By.cssSelector("[data-title='Total'] " +
+                "span.woocommerce-Price-amount"));
+        Assert.assertEquals("114.00€", totalPrice.getText());
+    }
+
+    private void applyCoupon() throws InterruptedException {
+        var couponCodeTextField = driver.findElement(By.id("coupon_code"));
+        couponCodeTextField.clear();
+        couponCodeTextField.sendKeys("happybirthday");
+        var applyCouponButton = driver.findElement(By.cssSelector("[name='apply_coupon']"));
+        applyCouponButton.click();
+        Thread.sleep(5000);
+        var messageAlert = driver.findElement(By.cssSelector(".woocommerce-message"));
+        Assert.assertEquals(messageAlert.getText(), "Coupon code applied successfully.");
+    }
+
+    private void addRocketToShoppingCart() throws InterruptedException {
+        var addToCartFalcon9 = driver.findElement(By.cssSelector("[data-product_id*='28']"));
+        addToCartFalcon9.click();
+        Thread.sleep(5000);
+        var viewCart = driver.findElement(By.cssSelector(".added_to_cart"));
+        viewCart.click();
     }
 
 }
