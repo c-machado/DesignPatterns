@@ -117,6 +117,7 @@ public class ProductPurchaseTest {
         var showLogin = driver.findElement(By.cssSelector(".showlogin"));
         showLogin.click();
         login(purchaseEmail);
+        //todo: asynchronous requests
         Thread.sleep(5000);
         waitToBeClickable(By.id("place_order"));
         var placeOrder = waitAndFindElement(By.id("place_order"));
