@@ -8,7 +8,7 @@ import org.testng.annotations.*;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-public class ProductPurchaseTest {
+public class ProductPurchaseTests {
 
     private Driver driver;
     private static String purchaseEmail;
